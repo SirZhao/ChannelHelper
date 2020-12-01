@@ -1,0 +1,62 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+//    id 'maven'
+    id 'com.novoda.bintray-release' //上传JCenter依赖
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${rootProject.ext.config["kotlin_version"]}"
+}
+
+//上传到Maven配置
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+////            pom.version = "1.0-SNAPSHOT"
+////            repository(url: "http://172.16.3.243/repository/android-snapshot/") {
+////                authentication(userName: "zhaodongdong", password: "zhaodongdong")
+////            }
+//            pom.version = "1.0.0"
+////            repository(url: "http://172.16.3.243/repository/android-release/") {
+////                authentication(userName: "zhaodongdong", password: "zhaodongdong")
+////            }
+//            repository(url: "file://" + new File("/Users/ZDD/T3/repository").getAbsolutePath())
+//            pom.artifactId = "helper"
+//            pom.packaging = "jar"
+//            pom.groupId = "com.android.channel"
+//            pom.name = "helper"
+//        }
+//    }
+//}
+
+//上传JCenter配置
+publish {
+    repoName = 'maven'//远程仓库名字
+    userOrg = 'androidmdeveloper'//bintray.com用户名
+    groupId = 'com.android.channel'//jcenter上的路径
+    artifactId = 'helper'//项目名称
+    publishVersion = '1.0.0'//版本号
+    desc = 'android channel tools'//描述，不重要
+    website = 'https://github.com/SirZhao/Arouter-register'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
+}
